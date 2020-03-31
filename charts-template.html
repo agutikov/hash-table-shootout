@@ -1,8 +1,11 @@
 <html>
     <head>
-        <!--[if IE]><script language="javascript" type="text/javascript" src="./excanvas.min.js"></script><![endif]-->
-        <script language="javascript" type="text/javascript" src="./jquery.js"></script>
-        <script language="javascript" type="text/javascript" src="./jquery.flot.js"></script>
+        <script language="javascript" type="text/javascript"
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+            crossorigin="anonymous"></script>
+        <script language="javascript" type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js"></script>
     </head>
     <body>
 
@@ -31,11 +34,13 @@
                            else {
                                return parseInt(num/1000) + 'k'; 
                            }
-                       }
+                       },
+        //transform: function(v) { return Math.log10(v+0.000001); }
     };
 
     yaxis_runtime_settings = {
-        tickFormatter: function(num, obj) { return (+num.toFixed(2)) + ' sec.'; }
+        tickFormatter: function(num, obj) { return (+num.toFixed(2)) + ' sec.'; },
+        //transform: function(v) { return Math.log10(v+0.000001); }
     };
 
     yaxis_memory_settings = {
