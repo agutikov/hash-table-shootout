@@ -39,6 +39,8 @@ proper_names = OrderedDict([
     ('emilib_hash_map', 'emilib::HashMap'),
     ('tsl_array_map', 'tsl::array_map'),
     ('tsl_array_map_mlf_1_0', 'tsl::array_map (1.0 mlf)'),
+    ('judy_map_l', 'judy_map_l'),
+    ('judy_map_m', 'judy_map_m'),
 ])
 
 # do them in the desired order to make the legend not overlap the chart data
@@ -65,6 +67,8 @@ program_slugs = [
     'emilib_hash_map',
     'tsl_array_map',
     'tsl_array_map_mlf_1_0',
+    'judy_map_l',
+    'judy_map_m',
 ]
 
 # hashmap which will be shown (checkbox checked)
