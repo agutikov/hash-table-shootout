@@ -80,7 +80,9 @@ default_programs_show = [
     'tsl_hopscotch_map',
     'tsl_robin_map',
     'tsl_hopscotch_map_store_hash',
-    'tsl_robin_map_store_hash']
+    'tsl_robin_map_store_hash',
+    'judy_map_l',
+    'judy_map_m']
 
 chart_data = {}
 
