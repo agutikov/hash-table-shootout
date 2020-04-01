@@ -12,8 +12,8 @@ Now, run:
 
 $ git submodule update --init --recursive
 $ make
-$ python bench.py
-$ python make_chart_data.py < output | python make_html.py
+$ python3 bench.py
+$ python3 make_chart_data.py < output | python3 make_html.py
 
 Your charts are now in charts.html.
 

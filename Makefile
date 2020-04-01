@@ -3,7 +3,7 @@ CXX=clang++
 CXX_FLAGS=-O2 -std=c++14 -DNDEBUG -ljemalloc
 
 
-all: build/judy_map_l build/judy_map_m build/std_unordered_map build/boost_unordered_map build/google_sparse_hash_map build/google_dense_hash_map build/google_dense_hash_map_mlf_0_9 build/qt_qhash build/spp_sparse_hash_map build/emilib_hash_map build/ska_flat_hash_map build/ska_flat_hash_map_power_of_two build/tsl_hopscotch_map build/tsl_hopscotch_map_mlf_0_5 build/tsl_hopscotch_map_store_hash build/tsl_robin_map build/tsl_robin_map_mlf_0_9 build/tsl_robin_map_store_hash build/tsl_robin_pg_map build/tsl_sparse_map build/tsl_ordered_map
+all: build/judy_map_kdcell build/judy_map_l build/judy_map_m build/std_unordered_map build/boost_unordered_map build/google_sparse_hash_map build/google_dense_hash_map build/google_dense_hash_map_mlf_0_9 build/qt_qhash build/spp_sparse_hash_map build/emilib_hash_map build/ska_flat_hash_map build/ska_flat_hash_map_power_of_two build/tsl_hopscotch_map build/tsl_hopscotch_map_mlf_0_5 build/tsl_hopscotch_map_store_hash build/tsl_robin_map build/tsl_robin_map_mlf_0_9 build/tsl_robin_map_store_hash build/tsl_robin_pg_map build/tsl_sparse_map build/tsl_ordered_map
 
 build/std_unordered_map: src/std_unordered_map.cc src/template.c
 	$(CXX) $(CXX_FLAGS) -lm -o $@ $<
@@ -83,6 +83,9 @@ build/judy_map_l: src/judy_map_l.cc src/template.c
 	$(CXX) $(CXX_FLAGS) -Ijudyhash/libjudyhash -lJudy -o $@ $<
 
 build/judy_map_m: src/judy_map_m.cc src/template.c
+	$(CXX) $(CXX_FLAGS) -Ijudyhash/libjudyhash -lJudy -o $@ $<
+
+build/judy_map_kdcell: src/judy_map_kdcell.cc src/template.c
 	$(CXX) $(CXX_FLAGS) -Ijudyhash/libjudyhash -lJudy -o $@ $<
 
 

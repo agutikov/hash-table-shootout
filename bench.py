@@ -1,4 +1,19 @@
-import sys, os, subprocess, signal
+import sys
+import os
+import subprocess
+import signal
+import asyncio
+import multiprocessing
+
+stopped = False
+
+def handler(signum, frame):
+    global stopped
+    stopped = True
+
+signal.signal(signal.SIGINT, handler)
+signal.signal(signal.SIGTERM, handler)
+
 
 programs = [
     'std_unordered_map',
@@ -24,13 +39,14 @@ programs = [
     #'tsl_array_map_mlf_1_0'
     'judy_map_l',
     'judy_map_m',
+    'judy_map_kdcell',
 ]
 
-minkeys  =  10*100*1000
+minkeys  =  2*100*1000
 maxkeys  = 100*100*1000
-interval =  10*100*1000
+interval =  2*100*1000
 points = range(minkeys, maxkeys + 1, interval)
-best_out_of = 1
+best_out_of = 5
 
 outfile = open('output', 'w')
 
@@ -62,38 +78,98 @@ else:
                   'delete_string', )
 
 
-for nkeys in points:
-    for benchtype in benchtypes:
-        for program in programs:
-            if program.startswith('tsl_array_map') and 'string' not in benchtype:
+async def run(program, nkeys, benchtype):
+    cmd = f'./build/{program} {nkeys} {benchtype}'
+    try:
+        proc = await asyncio.create_subprocess_shell(
+            cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE)
+
+        stdout, stderr = await proc.communicate()
+
+        words = stdout.strip().split()
+        runtime_seconds = float(words[0])
+        memory_usage_bytes = int(words[1])
+        load_factor = float(words[2])
+    except:
+        print(f"Error with {cmd}\n{stderr}")
+        return None
+    return (runtime_seconds, memory_usage_bytes, load_factor)
+
+
+parallellism = multiprocessing.cpu_count()
+
+
+async def handle_tasks(results, tasks):
+    global stopped
+    while len(tasks) >= parallellism or (stopped and len(tasks) > 0):
+        done, _ = await asyncio.wait(set(tasks.keys()), return_when=asyncio.FIRST_COMPLETED)
+
+        for task in done:
+            result = await task
+            key = tasks[task]
+            del tasks[task]
+            print(key, 'Done', results[key])
+
+            if result is None:
                 continue
-            
-            fastest_attempt = 1000000
-            fastest_attempt_data = ''
 
-            for attempt in range(best_out_of):
-                try:
-                    output = subprocess.check_output(['./build/' + program, str(nkeys), benchtype])
-                    words = output.strip().split()
-                    
-                    runtime_seconds = float(words[0])
-                    memory_usage_bytes = int(words[1])
-                    load_factor = float(words[2])
-                except:
-                    print("Error with %s" % str(['./build/' + program, str(nkeys), benchtype]))
-                    break
+            prev_result = results[key]
 
-                line = ','.join(map(str, [benchtype, nkeys, program, "%0.2f" % load_factor, 
-                                          memory_usage_bytes, "%0.6f" % runtime_seconds]))
+            fastest_result = prev_result[1]
+            if result[0] < fastest_result[0]:
+                    fastest_result = result
 
-                if runtime_seconds < fastest_attempt:
-                    fastest_attempt = runtime_seconds
-                    fastest_attempt_data = line
+            results[key] = (prev_result[0] - 1, fastest_result)
 
-            if fastest_attempt != 1000000:
-                print(fastest_attempt_data, file=outfile)
-                print(fastest_attempt_data)
-        
-        # Print blank line
-        print(file=outfile)
-        print()
+            if prev_result[0] > 0:
+                if not stopped:
+                    # repeat
+                    t = asyncio.create_task(run(*key))
+                    tasks[t] = key
+            else:
+                # print fastest_result
+                runtime_seconds, memory_usage_bytes, load_factor = fastest_result
+                if runtime_seconds != 1000000:
+                    program, nkeys, benchtype = key
+                    line = ','.join(map(str, [benchtype,
+                                            nkeys,
+                                            program,
+                                            "%0.2f" % load_factor, 
+                                            memory_usage_bytes,
+                                            "%0.6f" % runtime_seconds]))
+                    print(line, file=outfile)
+                    print(line)
+
+
+async def main():
+    global stopped
+    results = {} # (nkeys, benchtype, program) -> (repeat_countdown, (runtime_seconds, memory_usage_bytes, load_factor))
+    tasks = {} # task -> (nkeys, benchtype, program)
+
+    for nkeys in points:
+        for benchtype in benchtypes:
+            for program in programs:
+                if program.startswith('tsl_array_map') and 'string' not in benchtype:
+                    continue
+                if 'kdcell' in program and 'string' in benchtype:
+                    continue
+
+                if stopped and len(tasks) == 0:
+                    print('Stopped. Exit.')
+                    return
+
+                key = (program, nkeys, benchtype)
+                results[key] = (best_out_of - 1, (1000000, 0, 0))
+
+                task = asyncio.create_task(run(*key))
+                tasks[task] = key
+
+                await handle_tasks(results, tasks)
+
+    stopped = True
+    await handle_tasks(results, tasks)
+
+
+asyncio.run(main())

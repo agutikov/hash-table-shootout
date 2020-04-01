@@ -41,6 +41,7 @@ proper_names = OrderedDict([
     ('tsl_array_map_mlf_1_0', 'tsl::array_map (1.0 mlf)'),
     ('judy_map_l', 'judy_map_l'),
     ('judy_map_m', 'judy_map_m'),
+    ('judy_map_kdcell', 'judy_map_kdcell'),
 ])
 
 # do them in the desired order to make the legend not overlap the chart data
@@ -69,6 +70,7 @@ program_slugs = [
     'tsl_array_map_mlf_1_0',
     'judy_map_l',
     'judy_map_m',
+    'judy_map_kdcell'
 ]
 
 # hashmap which will be shown (checkbox checked)
@@ -82,7 +84,9 @@ default_programs_show = [
     'tsl_hopscotch_map_store_hash',
     'tsl_robin_map_store_hash',
     'judy_map_l',
-    'judy_map_m']
+    'judy_map_m',
+    'judy_map_kdcell'
+]
 
 chart_data = {}
 
