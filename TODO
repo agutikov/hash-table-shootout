@@ -5,6 +5,9 @@ bench cmdline opts
 
 make_chart_data - collect names from output
 
+test run execution limit
+
+
 
 add tests for avg/max op time on n_items map (fill, small batch, track time, get avg and max)
 
@@ -19,7 +22,11 @@ emilib - WTF???
 libglib
 apr
 
+judy_map_* collision counter
+
 judy + different collision handling (probing)
+
+https://code.google.com/archive/p/judyarray/
 
 trie w/o compaction + different collision handling (probing)
 
