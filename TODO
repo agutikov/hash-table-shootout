@@ -1,7 +1,9 @@
 
 
 
-for (const auto& [key, value]: myMap)
+bench cmdline opts
+
+make_chart_data - collect names from output
 
 
 add tests for avg/max op time on n_items map (fill, small batch, track time, get avg and max)

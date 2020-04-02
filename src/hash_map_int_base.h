@@ -7,6 +7,6 @@
 #define FIND_INT_EXISTING_FROM_HASH(key) if(hash.find(key) == hash.end()) { printf("error"); exit(1); }
 #define FIND_INT_MISSING_FROM_HASH(key) if(hash.find(key) != hash.end()) { printf("error"); exit(1); }
 #define FIND_INT_EXISTING_FROM_HASH_COUNT(key, count) if(hash.find(key) != hash.end()) { count++; }
-#define CHECK_INT_ITERATOR_VALUE(iterator, value) if(iterator.second != value) { printf("error"); exit(1); }
-#define ITERATE_HASH_CONST for (const auto& it : hash)
+#define CHECK_INT_ITERATOR_VALUE(iterator, value) if(_v != value) { printf("error"); exit(1); }
+#define ITERATE_HASH_CONST for (const auto& [_k, _v]: hash)
 

@@ -110,7 +110,7 @@ async def handle_tasks(results, tasks):
             result = await task
             key = tasks[task]
             del tasks[task]
-            print(key, 'Done', results[key])
+            #print(key, 'Done', results[key])
 
             if result is None:
                 continue
