@@ -1,91 +1,47 @@
+
 CXX=clang++
-#CXX_FLAGS=-O3 -march=native -std=c++14 -DNDEBUG
-CXX_FLAGS=-O2 -std=c++14 -DNDEBUG -ljemalloc
+#CXX_FLAGS=-O3 -march=native -std=c++17 -DNDEBUG
+CXX_FLAGS=-O2 -std=c++17 -DNDEBUG -ljemalloc
 
-
-all: build/judy_map_kdcell build/judy_map_l build/judy_map_m build/std_unordered_map build/boost_unordered_map build/google_sparse_hash_map build/google_dense_hash_map build/google_dense_hash_map_mlf_0_9 build/qt_qhash build/spp_sparse_hash_map build/emilib_hash_map build/ska_flat_hash_map build/ska_flat_hash_map_power_of_two build/tsl_hopscotch_map build/tsl_hopscotch_map_mlf_0_5 build/tsl_hopscotch_map_store_hash build/tsl_robin_map build/tsl_robin_map_mlf_0_9 build/tsl_robin_map_store_hash build/tsl_robin_pg_map build/tsl_sparse_map build/tsl_ordered_map
-
-build/std_unordered_map: src/std_unordered_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -lm -o $@ $<
-
-build/boost_unordered_map: src/boost_unordered_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -lm -o $@ $<
-
-build/google_sparse_hash_map: src/google_sparse_hash_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -lm -o $@ $<
-
-build/google_dense_hash_map: src/google_dense_hash_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -lm -o $@ $<
-
-build/google_dense_hash_map_mlf_0_9: src/google_dense_hash_map_mlf_0_9.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -lm -o $@ $<
+APPS = std_unordered_map boost_unordered_map
+APPS+= google_sparse_hash_map google_dense_hash_map google_dense_hash_map_mlf_0_9
+APPS+= qt_qhash
+APPS+= spp_sparse_hash_map
+APPS+= emilib_hash_map
+APPS+= ska_flat_hash_map ska_flat_hash_map_power_of_two
+APPS+= tsl_hopscotch_map tsl_hopscotch_map_mlf_0_5 tsl_hopscotch_map_store_hash
+APPS+= tsl_robin_map tsl_robin_map_mlf_0_9 tsl_robin_map_store_hash tsl_robin_pg_map
+APPS+= tsl_sparse_map
+APPS+= tsl_ordered_map
+APPS+= tsl_array_map tsl_array_map_mlf_1_0
+APPS+= judy_map_kdcell judy_map_l judy_map_m
 
 PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/
 
-build/qt_qhash: src/qt_qhash.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -lm `pkg-config --cflags --libs Qt5Core` -fPIC -o $@ $<
+CXX_FLAGS+= -lm
+CXX_FLAGS+= $(shell pkg-config --cflags --libs Qt5Core) -fPIC
+CXX_FLAGS+= -Isparsepp
+CXX_FLAGS+= -Iemilib
+CXX_FLAGS+= -Iflat_hash_map
+CXX_FLAGS+= -Ihopscotch-map
+CXX_FLAGS+= -Irobin-map/include
+CXX_FLAGS+= -Isparse-map/include
+CXX_FLAGS+= -Iordered-map/include
+CXX_FLAGS+= -Iarray-hash/include
+CXX_FLAGS+= -Ijudyhash/libjudyhash -lJudy
 
-build/spp_sparse_hash_map: src/spp_sparse_hash_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Isparsepp -o $@ $<
+BUILD_DIR=./build
 
-build/emilib_hash_map: src/emilib_hash_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Iemilib -o $@ $<
+EXECUTABLES = $(APPS:%=$(BUILD_DIR)/%)
 
-build/ska_flat_hash_map: src/ska_flat_hash_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Iflat_hash_map -o $@ $<
+all: | $(BUILD_DIR) $(EXECUTABLES)
 
-build/ska_flat_hash_map_power_of_two: src/ska_flat_hash_map_power_of_two.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Iflat_hash_map -o $@ $<
+$(EXECUTABLES): $(BUILD_DIR)/%: src/%.cc src/template.c
+	$(CXX) $(CXX_FLAGS) -o $@ $<
 
+$(BUILD_DIR):
+	mkdir -p $@
 
-
-build/tsl_hopscotch_map: src/tsl_hopscotch_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Ihopscotch-map -o $@ $<
-
-build/tsl_hopscotch_map_mlf_0_5: src/tsl_hopscotch_map_mlf_0_5.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Ihopscotch-map -o $@ $<
-
-build/tsl_hopscotch_map_store_hash: src/tsl_hopscotch_map_store_hash.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Ihopscotch-map -o $@ $<
-
-
-
-build/tsl_robin_map: src/tsl_robin_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Irobin-map/include -o $@ $<
-
-build/tsl_robin_map_mlf_0_9: src/tsl_robin_map_mlf_0_9.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Irobin-map/include -o $@ $<
-
-build/tsl_robin_map_store_hash: src/tsl_robin_map_store_hash.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Irobin-map/include -o $@ $<
-
-build/tsl_robin_pg_map: src/tsl_robin_pg_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Irobin-map/include -o $@ $<
-
-
-
-build/tsl_sparse_map: src/tsl_sparse_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Isparse-map/include -o $@ $<
-
-build/tsl_ordered_map: src/tsl_ordered_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Iordered-map/include -o $@ $<
-
-# Array map need C++17 as it needs std::string_view for the hash part. Not part of the 'all' build
-build/tsl_array_map: src/tsl_array_map.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -std=c++17 -Iarray-hash/include -o $@ $<
-
-build/tsl_array_map_mlf_1_0: src/tsl_array_map_mlf_1_0.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -std=c++17 -Iarray-hash/include -o $@ $<
-
-
-
-build/judy_map_l: src/judy_map_l.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Ijudyhash/libjudyhash -lJudy -o $@ $<
-
-build/judy_map_m: src/judy_map_m.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Ijudyhash/libjudyhash -lJudy -o $@ $<
-
-build/judy_map_kdcell: src/judy_map_kdcell.cc src/template.c
-	$(CXX) $(CXX_FLAGS) -Ijudyhash/libjudyhash -lJudy -o $@ $<
-
+clean:
+	rm -f $(BUILD_DIR)/*
 

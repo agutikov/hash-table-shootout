@@ -247,7 +247,7 @@ int main(int argc, char ** argv) {
         
         
         measurements m;
-        for(auto it = hash.begin(); it != hash.end(); ++it) {
+        ITERATE_HASH_CONST {
             CHECK_INT_ITERATOR_VALUE(it, value);
         }
     }
@@ -466,6 +466,6 @@ int main(int argc, char ** argv) {
     }
     
     
-    const float load_factor = std::max(LOAD_FACTOR(hash), LOAD_FACTOR(str_hash));
+    const float load_factor = std::max(LOAD_FACTOR_INT_HASH(), LOAD_FACTOR_STR_HASH());
     std::cout << load_factor << std::endl;
 }

@@ -2,7 +2,14 @@
 
 optional int/string tests
 
+for (const auto& [key, value]: myMap)
+
+
 add tests for avg/max op time on n_items map (fill, small batch, track time, get avg and max)
+
+add tests: N maps x M elements
+add tests: multiple operations: add, lookup+miss, get, remove
+add tests: iterate all elements, intersection
 
 
 
