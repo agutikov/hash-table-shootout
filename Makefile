@@ -1,7 +1,7 @@
 
 CXX=clang++
 #CXX_FLAGS=-O3 -march=native -std=c++17 -DNDEBUG
-CXX_FLAGS=-O2 -std=c++17 -DNDEBUG -ljemalloc
+CXX_FLAGS= -Werror -O2 -std=c++17 -DNDEBUG -ljemalloc
 
 APPS = std_unordered_map boost_unordered_map
 APPS+= google_sparse_hash_map google_dense_hash_map google_dense_hash_map_mlf_0_9
