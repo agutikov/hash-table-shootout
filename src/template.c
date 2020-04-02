@@ -131,13 +131,21 @@ int main(int argc, char ** argv) {
     const std::int64_t value = 1;
 
 
-    SETUP
+#ifdef SETUP_INT
+    SETUP_INT;
+#endif
 
+#ifdef SETUP_STR
+    SETUP_STR;
+#endif
 
+    if (false) {}
+
+#ifdef SETUP_INT
     /**
      * Integers
      */
-    if(test_type == "insert_random_shuffle_range") {
+    else if(test_type == "insert_random_shuffle_range") {
         const std::vector<std::int64_t> keys = get_random_shuffle_range_ints(num_keys);
         
         
@@ -266,8 +274,10 @@ int main(int argc, char ** argv) {
             DELETE_INT_FROM_HASH(keys[i]);
         }
     }
+#endif
     
     
+#ifdef SETUP_STR
     /**
      * Small strings
      */
@@ -459,13 +469,23 @@ int main(int argc, char ** argv) {
             DELETE_STR_FROM_HASH(keys[i]);
         }
     }
+#endif
     
     else {
         std::cout << "Unknown test type: " << test_type << "." << std::endl;
         std::exit(1);
     }
     
-    
-    const float load_factor = std::max(LOAD_FACTOR_INT_HASH(), LOAD_FACTOR_STR_HASH());
-    std::cout << load_factor << std::endl;
+    float load_factor_int = 0;
+    float load_factor_str = 0;
+
+#ifdef SETUP_INT
+    load_factor_int = LOAD_FACTOR_INT_HASH();
+#endif
+
+#ifdef SETUP_STR
+    load_factor_str = LOAD_FACTOR_STR_HASH();
+#endif
+
+    std::cout << std::max(load_factor_int, load_factor_str) << std::endl;
 }

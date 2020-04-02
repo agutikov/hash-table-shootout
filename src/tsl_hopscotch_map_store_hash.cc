@@ -10,7 +10,8 @@ typedef tsl::hopscotch_map<std::string, int64_t, std::hash<std::string>,
                            30, true> str_hash_t;
 
 
-#include "hash_map_base.h"
+#include "hash_map_int_base.h"
+#include "hash_map_str_base.h"
 
 #include "template.c"
 
