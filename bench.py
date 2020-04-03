@@ -43,10 +43,10 @@ programs = [
 ]
 
 minkeys  =  2*100*1000
-maxkeys  = 100*100*1000
+maxkeys  = 10*100*1000
 interval =  2*100*1000
 points = range(minkeys, maxkeys + 1, interval)
-best_out_of = 5
+best_out_of = 1
 
 outfile = open('output', 'w')
 
