@@ -1,19 +1,36 @@
 
 
+drop best_out_of
 
-bench cmdline opts
+bench.py cmdline opts
+    type: str/int, detailed
+    apps:
+    counters
+    sum repeats
+    batch repeats
+
+
+bench.py test run execution limit
+
+
+
+
+batch tests with log n_items
+avg cpu cycles and time
+max op elapsed time
+tests for avg/max op time on n_items map (fill, small batch, track time, get avg and max)
+test option:
+- number of maps
+- preparation: fill, fill + delete random half, havily used (fill+delete multiple times, with timeout)
+- operations: insert, delete, lookup existing, lookup missed, iterate, intersect, random ops
+exponentiall fill 1000,10k,100k,1M,... and bench on every size
+
+
+boost::multi_index
+
+
 
 make_chart_data - collect names from output
-
-test run execution limit
-
-
-
-add tests for avg/max op time on n_items map (fill, small batch, track time, get avg and max)
-
-add tests: N maps x M elements
-add tests: multiple operations: add, lookup+miss, get, remove
-add tests: iterate all elements, intersection
 
 
 
