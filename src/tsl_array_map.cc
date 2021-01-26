@@ -2,11 +2,11 @@
 #include <string>
 #include <tsl/array_map.h>
 
-#include <experimental/string_view>
+#include <string_view>
 template<class CharT>
 struct str_hash {
     std::size_t operator()(const CharT* key, std::size_t key_size) const {
-        return std::hash<std::experimental::string_view>()(std::experimental::string_view(key, key_size));
+        return std::hash<std::string_view>()(std::string_view(key, key_size));
     }
 };
 

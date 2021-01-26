@@ -5,7 +5,7 @@ CXX_FLAGS= -Werror -O2 -std=c++17 -DNDEBUG -ljemalloc
 
 APPS = std_unordered_map boost_unordered_map
 APPS+= google_sparse_hash_map google_dense_hash_map google_dense_hash_map_mlf_0_9
-APPS+= qt_qhash
+#APPS+= qt_qhash
 APPS+= spp_sparse_hash_map
 APPS+= emilib_hash_map
 APPS+= ska_flat_hash_map ska_flat_hash_map_power_of_two
